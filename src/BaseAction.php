@@ -400,13 +400,13 @@ class BaseAction
      */
     protected function gitCall(...$args)
     {
-        return sprintf(
+        return trim(sprintf(
             '%s %s %s %s',
-            static::ENCODING_ENV,
+            ($this->isWindows()? '' : static::ENCODING_ENV),
             static::GIT_BINARY,
             "--git-dir={$this->root}/.git --work-tree={$this->root}",
             implode(' ', $args)
-        );
+        ));
     }
 
     /**
@@ -481,5 +481,14 @@ class BaseAction
         fclose($fileResourceB);
 
         return $equal;
+    }
+
+    /**
+     * Returns true when the current operating system is windows
+     *
+     * @return boolean
+     */
+    protected function isWindows() {
+        return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
     }
 }
